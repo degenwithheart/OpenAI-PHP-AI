@@ -1,0 +1,35 @@
+.message-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.message-container.user {
+    justify-content: flex-end;
+}
+
+.message-bubble {
+    max-width: 70%;
+    margin: 0.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.message-bubble.user {
+    background-color: lightblue;
+    align-self: flex-end;
+}
+
+#loader {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    text-align: center;
+}
+
+#loader .progress {
+    width: 200px;
+    margin: 0 auto;
+}
