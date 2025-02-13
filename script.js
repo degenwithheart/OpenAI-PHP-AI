@@ -94,5 +94,4 @@ userInput.addEventListener('keypress', (event) => {
 });
 
 document.getElementById('send-button').addEventListener('click', sendMessage);
-
 document.getElementById('clear-button').addEventListener('click', clearSession);
