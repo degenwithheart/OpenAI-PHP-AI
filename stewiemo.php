@@ -29,6 +29,7 @@ function chatGPT($messages) {
     // Handling to clear session
     if ($messages[count($messages) - 1]['content'] === 'clear-session') {
         session_destroy(); // Destroy session
+        logMessage("Session cleared by user request.");
         return 'Session cleared. Please start a new conversation.'; // Inform user
     }
 
@@ -46,22 +47,31 @@ function chatGPT($messages) {
     return $response['choices'][0]['message']['content'];
 }
 
+// Enhanced logging function
+function logMessage($message) {
+    $logFile = 'log.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+}
+
 // Processing user input and generating ChatGPT response
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = $_POST['message'];
+    logMessage("User input: $input");
 
     // Retrieve conversation history from session
     session_start();
     $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : [];
 
     // Add user input to conversation history
-    $messages[] = ['role' => 'user', 'content' => $input'];
+    $messages[] = ['role' => 'user', 'content' => $input];
 
     // Generate response from ChatGPT
     $response = chatGPT($messages);
+    logMessage("ChatGPT response: $response");
 
     // Add ChatGPT response to conversation history
-    $messages[] = ['role' => 'assistant', 'content' => $response'];
+    $messages[] = ['role' => 'assistant', 'content' => $response];
 
     // Save conversation history to session
     $_SESSION['messages'] = $messages;
