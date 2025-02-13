@@ -14,11 +14,22 @@
                     session_start();
                     include 'stewiemo.php';
 
+                    // Enhanced logging function
+                    function logMessage($message) {
+                        $logFile = 'log.txt';
+                        $timestamp = date('Y-m-d H:i:s');
+                        file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+                    }
+
                     // Check if a message was posted
                     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
                         $input = $_POST['message'];
+                        logMessage("User input: $input");
+
                         // Generate response from ChatGPT
                         $response = chatGPT([['role' => 'user', 'content' => $input]]);
+                        logMessage("ChatGPT response: $response");
+
                         // Add response to session messages
                         $_SESSION['messages'][] = ['role' => 'user', 'content' => $input];
                         $_SESSION['messages'][] = ['role' => 'assistant', 'content' => $response];
@@ -29,6 +40,13 @@
                         foreach ($_SESSION['messages'] as $message) {
                             echo '<div class="' . $message['role'] . '">' . htmlspecialchars($message['content']) . '</div>';
                         }
+                    }
+
+                    // Handle session clear
+                    if (isset($_POST['clear']) && $_POST['clear'] == '1') {
+                        session_destroy();
+                        header("Location: " . $_SERVER['PHP_SELF']);
+                        exit();
                     }
                 ?>
             </div>
